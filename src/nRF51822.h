@@ -95,6 +95,7 @@ class nRF51822 : public BLEDevice
     virtual void requestAddress();
     virtual void requestTemperature();
     virtual void requestBatteryLevel();
+    virtual void requestRssi();
 
   private:
 

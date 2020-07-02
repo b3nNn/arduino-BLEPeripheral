@@ -549,6 +549,7 @@ void nRF51822::poll() {
 #endif
 
         this->_connectionHandle = bleEvt->evt.gap_evt.conn_handle;
+        sd_ble_gap_rssi_start(this->_connectionHandle, BLE_GAP_RSSI_THRESHOLD_INVALID, 0);
 
 #if defined(NRF5) && !defined(S110)
         {
@@ -1381,6 +1382,16 @@ void nRF51822::requestTemperature() {
 }
 
 void nRF51822::requestBatteryLevel() {
+}
+
+void nRF51822::requestRssi() {
+  int8_t rssi;
+  uint32_t err_code;
+  
+  err_code = sd_ble_gap_rssi_get(this->_connectionHandle, &rssi);
+  if (err_code == NRF_SUCCESS) {
+    this->_eventListener->BLEDeviceRssiReceived(*this, rssi / 1.0);
+  }
 }
 
 #endif

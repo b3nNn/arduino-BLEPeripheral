@@ -37,6 +37,7 @@ class BLEDeviceEventListener
     virtual void BLEDeviceAddressReceived(BLEDevice& /*device*/, const unsigned char* /*address*/) { }
     virtual void BLEDeviceTemperatureReceived(BLEDevice& /*device*/, float /*temperature*/) { }
     virtual void BLEDeviceBatteryLevelReceived(BLEDevice& /*device*/, float /*batteryLevel*/) { }
+    virtual void BLEDeviceRssiReceived(BLEDevice& /*device*/, float /*rssi*/) { }
 };
 
 
@@ -91,6 +92,7 @@ class BLEDevice
     virtual void requestAddress() { }
     virtual void requestTemperature() { }
     virtual void requestBatteryLevel() { }
+    virtual void requestRssi() { }
 
   protected:
     unsigned short                _advertisingInterval;

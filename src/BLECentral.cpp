@@ -9,7 +9,7 @@
 #include "BLEUtil.h"
 
 BLECentral::BLECentral(BLEPeripheral* peripheral) :
-  _peripheral(peripheral)
+  _peripheral(peripheral), _rssi(0.f)
 {
   this->clearAddress();
 }
@@ -54,6 +54,10 @@ void BLECentral::disconnect() {
 
 void BLECentral::setAddress(const unsigned char* address) {
   memcpy(this->_address, address, sizeof(this->_address));
+}
+
+void BLECentral::setRssi(float rssi) {
+  this->_rssi = rssi;
 }
 
 void BLECentral::clearAddress() {

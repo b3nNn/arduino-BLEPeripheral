@@ -311,7 +311,7 @@ bool BLEPeripheral::unsubcribeRemoteCharacteristic(BLERemoteCharacteristic& char
   return this->_device->unsubcribeRemoteCharacteristic(characteristic);
 }
 
-void BLEPeripheral::BLEDeviceConnected(BLEDevice& /*device*/, const unsigned char* address) {
+void BLEPeripheral::BLEDeviceConnected(BLEDevice& device, const unsigned char* address) {
   this->_central.setAddress(address);
 
 #ifdef BLE_PERIPHERAL_DEBUG
@@ -323,6 +323,7 @@ void BLEPeripheral::BLEDeviceConnected(BLEDevice& /*device*/, const unsigned cha
   if (eventHandler) {
     eventHandler(this->_central);
   }
+  device.requestRssi();
 }
 
 void BLEPeripheral::BLEDeviceDisconnected(BLEDevice& /*device*/) {
@@ -371,7 +372,8 @@ void BLEPeripheral::BLEDeviceCharacteristicSubscribedChanged(BLEDevice& /*device
   characteristic.setSubscribed(this->_central, subscribed);
 }
 
-void BLEPeripheral::BLEDeviceRemoteCharacteristicValueChanged(BLEDevice& /*device*/, BLERemoteCharacteristic& remoteCharacteristic, const unsigned char* value, unsigned char valueLength) {
+void BLEPeripheral::BLEDeviceRemoteCharacteristicValueChanged(BLEDevice& device, BLERemoteCharacteristic& remoteCharacteristic, const unsigned char* value, unsigned char valueLength) {
+  device.requestRssi();
   remoteCharacteristic.setValue(this->_central, value, valueLength);
 }
 
@@ -390,6 +392,10 @@ void BLEPeripheral::BLEDeviceTemperatureReceived(BLEDevice& /*device*/, float /*
 }
 
 void BLEPeripheral::BLEDeviceBatteryLevelReceived(BLEDevice& /*device*/, float /*batteryLevel*/) {
+}
+
+void BLEPeripheral::BLEDeviceRssiReceived(BLEDevice& /*device*/, float rssi) {
+  this->_device->setRssi(rssi);
 }
 
 void BLEPeripheral::initLocalAttributes() {

@@ -123,6 +123,7 @@ class BLEPeripheral : public BLEDeviceEventListener,
     virtual void BLEDeviceAddressReceived(BLEDevice& device, const unsigned char* address);
     virtual void BLEDeviceTemperatureReceived(BLEDevice& device, float temperature);
     virtual void BLEDeviceBatteryLevelReceived(BLEDevice& device, float batteryLevel);
+    virtual void BLEDeviceRssiReceived(BLEDevice& device, float rssi);
 
   private:
     void initLocalAttributes();
