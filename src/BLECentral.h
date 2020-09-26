@@ -18,18 +18,15 @@ class BLECentral
     bool connected();
     const char* address() const;
     void poll();
-
     void disconnect();
 
   protected:
     BLECentral(BLEPeripheral* peripheral);
     void setAddress(const unsigned char* address);
-    void setRssi(float rssi);
     void clearAddress();
 
   private:
     BLEPeripheral* _peripheral;
-    float          _rssi;
     unsigned char  _address[6];
 };
 

@@ -549,7 +549,6 @@ void nRF51822::poll() {
 #endif
 
         this->_connectionHandle = bleEvt->evt.gap_evt.conn_handle;
-        sd_ble_gap_rssi_start(this->_connectionHandle, BLE_GAP_RSSI_THRESHOLD_INVALID, 0);
 
 #if defined(NRF5) && !defined(S110)
         {
@@ -581,6 +580,18 @@ void nRF51822::poll() {
 
         if (this->_numRemoteServices > 0) {
           sd_ble_gattc_primary_services_discover(this->_connectionHandle, 1, NULL);
+        }
+
+        this->_eventListener->BLEDeviceRssiReceived(*this, 2);
+        sd_ble_gap_rssi_start(this->_connectionHandle, BLE_GAP_RSSI_THRESHOLD_INVALID, 0);
+        int8_t rssi;
+        int32_t err_code;
+
+        err_code = sd_ble_gap_rssi_get(this->_connectionHandle, &rssi);
+        if (err_code == NRF_SUCCESS) {
+          this->_eventListener->BLEDeviceRssiReceived(*this, rssi);
+        } else {
+          this->_eventListener->BLEDeviceRssiReceived(*this, 24);
         }
         break;
 
@@ -1012,6 +1023,19 @@ void nRF51822::poll() {
         break;
       }
 
+      case BLE_GAP_EVT_RSSI_CHANGED: {
+        int8_t rssi;
+        uint32_t err_code;
+
+         this->_eventListener->BLEDeviceRssiReceived(*this, 42);
+        // err_code = sd_ble_gap_rssi_get(this->_connectionHandle, &rssi);
+        // if (err_code == NRF_SUCCESS) {
+        //   this->_eventListener->BLEDeviceRssiReceived(*this, 42);
+        // } else {
+        //   this->_eventListener->BLEDeviceRssiReceived(*this, 24);
+        // }
+      }
+
       default:
 #ifdef NRF_51822_DEBUG
         Serial.print(F("bleEvt->header.evt_id = 0x"));
@@ -1388,10 +1412,14 @@ void nRF51822::requestRssi() {
   int8_t rssi;
   uint32_t err_code;
   
-  err_code = sd_ble_gap_rssi_get(this->_connectionHandle, &rssi);
-  if (err_code == NRF_SUCCESS) {
-    this->_eventListener->BLEDeviceRssiReceived(*this, rssi / 1.0);
-  }
+  // if (this->_connectionHandle != BLE_CONN_HANDLE_INVALID) {
+    err_code = sd_ble_gap_rssi_get(this->_connectionHandle, &rssi);
+    if (err_code == NRF_SUCCESS) {
+      this->_eventListener->BLEDeviceRssiReceived(*this, rssi);
+    } else {
+      this->_eventListener->BLEDeviceRssiReceived(*this, 24);
+    }
+  // }
 }
 
 #endif

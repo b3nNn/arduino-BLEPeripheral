@@ -13,7 +13,6 @@ BLEDevice::BLEDevice() :
   _minimumConnectionInterval(0),
   _maximumConnectionInterval(0),
   _connectable(DEFAULT_CONNECTABLE),
-  _rssi(0.f),
   _bondStore(NULL),
   _eventListener(NULL)
 {

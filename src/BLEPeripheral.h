@@ -92,7 +92,7 @@ class BLEPeripheral : public BLEDeviceEventListener,
 
     BLECentral central();
     bool connected();
-
+    int8_t rssi();
     void setEventHandler(BLEPeripheralEvent event, BLEPeripheralEventHandler eventHandler);
 
   protected:
@@ -123,7 +123,7 @@ class BLEPeripheral : public BLEDeviceEventListener,
     virtual void BLEDeviceAddressReceived(BLEDevice& device, const unsigned char* address);
     virtual void BLEDeviceTemperatureReceived(BLEDevice& device, float temperature);
     virtual void BLEDeviceBatteryLevelReceived(BLEDevice& device, float batteryLevel);
-    virtual void BLEDeviceRssiReceived(BLEDevice& device, float rssi);
+    virtual void BLEDeviceRssiReceived(BLEDevice& device, int8_t rssi);
 
   private:
     void initLocalAttributes();
@@ -159,6 +159,8 @@ class BLEPeripheral : public BLEDeviceEventListener,
 
     BLECentral                     _central;
     BLEPeripheralEventHandler      _eventHandlers[4];
+
+    int8_t                        _rssi;
 };
 
 #endif
